@@ -23,6 +23,8 @@ type Props = {
   /** ズームが落ち着いたとき */
   onSettled?: () => void;
   interactive?: boolean;
+  /** true の間は描画を止める(上に不透明な画面が重なっているとき) */
+  paused?: boolean;
   className?: string;
 };
 
@@ -31,7 +33,6 @@ type Slot = { canvas: HTMLCanvasElement; tex: THREE.CanvasTexture; bounds: Rect;
 let effectRegistered = false;
 const SPRING = { type: "spring", stiffness: 55, damping: 15, mass: 1 } as const;
 const SHEET_SPRING = { type: "spring", stiffness: 70, damping: 16 } as const;
-const LENS_SPRING = { type: "spring", stiffness: 120, damping: 20 } as const;
 
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const smooth = (a: number, b: number, x: number) => {
@@ -55,7 +56,7 @@ export function worldToScreen(view: View, width: number, height: number, wx: num
   };
 }
 
-export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onSettled, interactive = true, className }: Props) {
+export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onSettled, interactive = true, paused = false, className }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const api = useRef<{
@@ -66,6 +67,8 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
   const cb = useRef({ onPick, onSettled, onSheetClick });
   cb.current = { onPick, onSettled, onSheetClick };
   const first = useRef({ view, layer, interactive, sheet });
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
 
   useEffect(() => {
     const el = canvas.current!;
@@ -104,9 +107,6 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
       center: { value: new THREE.Vector2(init.view.cx, init.view.cy) },
       zoom: { value: Math.log(init.view.h) },
       aspect: { value: 1 },
-      lens: { value: new THREE.Vector2(0.5, 0.5) },
-      lensOn: { value: 0 },
-      lensR: { value: 0.1 },
       inset: { value: init.sheet.inset },
       tilt: { value: init.sheet.tilt },
       wear: { value: init.sheet.wear },
@@ -219,10 +219,9 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
     api.current = { goTo, setSheet, setInteractive: (v) => (canInteract = v) };
 
     /* ---------- ポインター ---------- */
-    const toWorld = (clientX: number, clientY: number) => {
-      const r = el.getBoundingClientRect();
-      const u = (clientX - r.left) / r.width;
-      const vDown = (clientY - r.top) / r.height;
+    const toWorld = (e: MouseEvent) => {
+      const u = e.offsetX / Math.max(1, el.clientWidth);
+      const vDown = e.offsetY / Math.max(1, el.clientHeight);
       // シェーダーと同じ計算(uv は y 上向き)
       const px = (u - 0.5) * aspect;
       const py = 1 - vDown - 0.5;
@@ -248,11 +247,9 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
       paint(a, a.spec, a.bounds, hoverId, null, 1);
     };
     const onMove = (e: PointerEvent) => {
-      const p = toWorld(e.clientX, e.clientY);
-      animate(material, { lensX: p.u, lensY: 1 - p.v }, LENS_SPRING);
-      uniforms.lensOn.value = p.sx > 0 && p.sx < 1 && p.sy > 0 && p.sy < 1 ? 1 : 0;
+      const p = toWorld(e);
       if (!canInteract || busy) return;
-      const id = sheetState.wear > 0.5 ? null : pick(currentSpec, p.x, p.y);
+      const id = sheetState.wear < 0.5 ? pick(currentSpec, p.x, p.y) : null;
       if (id !== hoverId) {
         hoverId = id;
         el.dataset.hit = id ? "1" : "";
@@ -260,7 +257,6 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
       }
     };
     const onLeave = () => {
-      uniforms.lensOn.value = 0;
       if (hoverId) {
         hoverId = null;
         el.dataset.hit = "";
@@ -269,7 +265,7 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
     };
     const onClick = (e: MouseEvent) => {
       if (!canInteract) return;
-      const p = toWorld(e.clientX, e.clientY);
+      const p = toWorld(e);
       const inSheet = p.sx > 0 && p.sx < 1 && p.sy > 0 && p.sy < 1;
       if (sheetState.wear > 0.5) {
         if (inSheet) cb.current.onSheetClick?.();
@@ -283,6 +279,7 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
     el.addEventListener("click", onClick);
 
     const render = () => {
+      if (pausedRef.current) return;
       if (fade) {
         const dz = Math.abs(fade.z1 - fade.z0);
         const dc = fade.c0.distanceTo(fade.c1);
@@ -329,7 +326,7 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
   }, [view, layer]);
 
   return (
-    <div ref={host} className={className} style={{ position: "relative" }}>
+    <div ref={host} className={className}>
       <canvas
         ref={canvas}
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", touchAction: "none" }}

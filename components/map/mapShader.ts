@@ -25,9 +25,6 @@ export const fragmentShader = /* glsl */ `
   uniform vec2 center;    // 表示中心(世界座標)
   uniform float zoom;     // log(表示範囲の高さ)
   uniform float aspect;
-  uniform vec2 lens;      // 虫眼鏡の位置(0..1, y は上向き)
-  uniform float lensOn;
-  uniform float lensR;
   uniform float inset;
   uniform float tilt;
   uniform float wear;
@@ -85,26 +82,8 @@ export const fragmentShader = /* glsl */ `
     d += (fbm(q * 14.0) - 0.5) * 0.012 * wear + (noise(q * 90.0) - 0.5) * 0.004 * wear;
     float edgeAlpha = 1.0 - smoothstep(-0.0008, 0.0012, d);
 
-    /* ---- 紙の内容(虫眼鏡つき) ---- */
-    vec2 lensLocal = (vUv - lens) * vec2(aspect, 1.0) / lensR;
-    float r2 = dot(lensLocal, lensLocal);
-    float mask = (1.0 - smoothstep(0.96, 1.0, sqrt(r2))) * lensOn;
+    /* ---- 紙の内容 ---- */
     vec3 col = sampleScene(world);
-    if (mask > 0.0) {
-      vec3 n = normalize(vec3(lensLocal, sqrt(max(0.0, 1.0 - r2))));
-      vec3 ray = refract(vec3(0.0, 0.0, -1.0), n, 1.0 / 1.14);
-      float edge = mix(0.4, 2.0, smoothstep(0.2, 1.0, r2));
-      vec2 shift = ray.xy * 0.06 * edge * vec2(aspect, 1.0) * vec2(1.0, -1.0) * h / k;
-      vec3 r = sampleScene(world - shift * 0.96);
-      vec3 g = sampleScene(world - shift);
-      vec3 b = sampleScene(world - shift * 1.04);
-      vec3 glass = vec3(r.r, g.g, b.b);
-      float nz = sqrt(max(0.0, 1.0 - r2));
-      float fres = pow(1.0 - nz, 3.0);
-      float hi = pow(max(dot(normalize(vec3(lensLocal, nz)), normalize(vec3(-0.45, 0.65, 1.0))), 0.0), 24.0);
-      glass += vec3(fres * 0.12 + hi * 0.14);
-      col = mix(col, glass, mask);
-    }
 
     /* ---- 紙の質感 ---- */
     vec2 pp = s * vec2(aspect, 1.0);

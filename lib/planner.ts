@@ -134,8 +134,9 @@ export function optimizeOrder(start: Station, spots: Spot[], end: Station, start
         bi = i;
       }
     });
-    cur = remaining.splice(bi, 1)[0];
-    order.push(cur);
+    const next = remaining.splice(bi, 1)[0];
+    order.push(next);
+    cur = next;
   }
   let improved = true;
   let bestC = cost(simulate(start, order, end, startTime, hints));

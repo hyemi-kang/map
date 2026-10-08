@@ -16,18 +16,29 @@ body { font-family: var(--font-body); font-size: 20px; -webkit-font-smoothing: a
 button { font: inherit; color: inherit; }
 .pen, .pen * { cursor: var(--pen-cursor), pointer; }
 .pen-area { cursor: var(--pen-cursor), auto; }
-.map-canvas canvas { cursor: zoom-in; }
-.map-canvas.is-region canvas { cursor: default; }
-.map-canvas.is-region canvas[data-hit="1"] { cursor: var(--pen-cursor), pointer; }
+.map-canvas canvas { cursor: var(--pen-cursor), pointer; }
 
-/* 木の机: 横板 + 木目 + 周辺の落ち込み */
+/* 机の天板。実際の表示には焼き込み済みの画像(public/textures/wood.jpg)を使う。
+   SVG ノイズを何層も重ねたままだと、斜めに傾けたときに毎フレーム再描画されて重いため。 */
 .desk {
+  background-color: #a06d41;
+  background-size: 1040px 1040px;
+  background-repeat: repeat;
+  will-change: transform;
+}
+
+/* ↓ 上の画像の元になる定義(ヘッドレスブラウザで 1040px 角のタイルをスクリーンショットして作った)。画面では使わない */
+.desk-source {
   background:
-    radial-gradient(ellipse at 50% 38%, rgba(255, 236, 205, 0.28), rgba(255, 236, 205, 0) 62%),
-    radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(25, 10, 0, 0.5) 100%),
-    repeating-linear-gradient(0deg, rgba(34, 17, 4, 0.6) 0 2px, rgba(255, 224, 182, 0.16) 2px 4px, rgba(0, 0, 0, 0) 4px 230px),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='460'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.38' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.09  0 0 0 0 0.02  0 0 0 1.5 -0.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    linear-gradient(180deg, #a8764d 0%, #8c5c34 55%, #7b4f2b 100%);
+    /* 板の継ぎ目(影 + ハイライト) */
+    repeating-linear-gradient(90deg, rgba(30, 14, 3, 0.7) 0 2px, rgba(255, 225, 185, 0.18) 2px 4px, rgba(0, 0, 0, 0) 4px 260px),
+    /* 板ごとの明るさの違い */
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0 260px, rgba(255, 235, 200, 0.07) 260px 520px, rgba(0, 0, 0, 0.04) 520px 780px, rgba(255, 220, 170, 0.1) 780px 1040px),
+    /* 木目(縦方向に細く流れる) */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1040' height='1040'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.34 0.0035' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.09  0 0 0 0 0.02  0 0 0 1.6 -0.6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    /* 大きなまだら(節・色むら) */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1040' height='1040'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.006' numOctaves='3' seed='21' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.25  0 0 0 0 0.12  0 0 0 0 0.04  0 0 0 1.2 -0.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #8f5d36 0%, #a36e44 55%, #b27b4f 100%);
 }
 
 /* ノート: 罫線・余白の赤線 */

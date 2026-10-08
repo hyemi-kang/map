@@ -18,6 +18,16 @@ export function fitView(rect: Rect, aspect: number, pad: number, reserve: Reserv
 
 export const japanView = (aspect: number): View => fitView({ x: 0, y: 0, w: WORLD_W, h: WORLD_H }, aspect, 1.06);
 
+/** 4 都県が大きく見える、関東中心の視点(周りの県も少し見える) */
+export function kantoView(aspect: number, reserve?: Reserve): View {
+  const rects = (["tokyo", "kanagawa", "chiba", "saitama"] as PrefId[]).map(prefRect);
+  const x0 = Math.min(...rects.map((r) => r.x));
+  const y0 = Math.min(...rects.map((r) => r.y));
+  const x1 = Math.max(...rects.map((r) => r.x + r.w));
+  const y1 = Math.max(...rects.map((r) => r.y + r.h));
+  return fitView({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, aspect, 1.9, reserve);
+}
+
 export function prefRect(pref: PrefId): Rect {
   return featureRect(muniByPref[pref].features);
 }
