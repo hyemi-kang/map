@@ -123,8 +123,8 @@
 
 | # | 内容 | 状況 |
 | --- | --- | --- |
-| 1 | `BASE_PATH=/map npm run build` が `Invariant: no direct app page entry found for /_not-found` で失敗する。開発サーバーと `.next` の競合、または作業中コードが原因の可能性。切り分け未完了 | 調査中 |
-| 2 | GitHub Pages 用ワークフロー(`.github/workflows/deploy.yml`)が未コミット。ビルド成功を確認してからコミットする | 保留 |
+| 1 | 開発サーバー(`npm run dev`)の起動中に `npm run build` を実行すると、`.next` を共有して `/_not-found` のエラーで失敗する。ローカルで確認ビルドするときは `NEXT_DIST_DIR=.next-build` で出力先を分ける(`distDir` 指定時は静的エクスポートもそのフォルダに出る) | 回避策あり |
+| 2 | GitHub Pages のワークフロー(`.github/workflows/deploy.yml`)。リポジトリの Settings → Pages → Source を「GitHub Actions」に変更する必要がある | 設定待ち |
 | 3 | `data/regions.ts` のコメントが `scripts/verify-coords.mjs` に言及しているが、スクリプトが存在しない。座標検証は `npm run photos` の座標比較レポートで代用中 | 要整理 |
 | 4 | 定休日・祝日など曜日による営業可否は未対応 | 将来 |
 | 5 | 行程の保存・URL 共有は未対応 | 将来 |
