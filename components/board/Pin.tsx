@@ -15,24 +15,34 @@ type Props = {
   title?: string;
   onClick?: () => void;
   zIndex?: number;
+  /** ピンの上に付ける名前札(フォーカスしたとき) */
+  callout?: string;
 };
 
 const W = 28;
 const H = 46;
 
 /** プラスチックの頭と金属の針。針の先端が (x, y) に刺さる */
-export default function Pin({ x, y, color = "#d9534f", label, size = 1, delay = 0, ghost, title, onClick, zIndex = 1 }: Props) {
+export default function Pin({ x, y, color = "#d9534f", label, size = 1, delay = 0, ghost, title, onClick, zIndex = 1, callout }: Props) {
   const id = useId().replace(/:/g, "");
   const w = W * size;
   const h = H * size;
   const common = {
-    className: onClick ? "pen absolute" : "pointer-events-none absolute",
+    className: onClick ? "pen pointer-events-auto absolute" : "pointer-events-none absolute",
     style: { left: x - w / 2, top: y - h, width: w, height: h, zIndex, transformOrigin: "50% 100%" },
     initial: { y: -46, scale: 1.7, opacity: 0 },
     animate: { y: 0, scale: 1, opacity: ghost ? 0.55 : 1 },
     exit: { y: -20, scale: 1.2, opacity: 0 },
     transition: { type: "spring" as const, stiffness: 380, damping: 17, delay },
   };
+  const tag = callout ? (
+    <span
+      className="pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#fffdf6] px-2 text-[20px] leading-[28px] text-[#3b2f24] shadow-[0_3px_8px_rgba(30,15,0,0.4)]"
+      style={{ fontFamily: "var(--font-hand)", transform: "translateX(-50%) rotate(-2deg)" }}
+    >
+      {callout}
+    </span>
+  ) : null;
   const svg = (
     <svg viewBox={`0 0 ${W} ${H}`} width={w} height={h} style={{ overflow: "visible", display: "block" }}>
       <defs>
@@ -67,9 +77,15 @@ export default function Pin({ x, y, color = "#d9534f", label, size = 1, delay = 
   if (onClick) {
     return (
       <motion.button type="button" onClick={onClick} title={title} aria-label={title} whileHover={{ y: -4, opacity: 1 }} {...common}>
+        {tag}
         {svg}
       </motion.button>
     );
   }
-  return <motion.div {...common}>{svg}</motion.div>;
+  return (
+    <motion.div {...common}>
+      {tag}
+      {svg}
+    </motion.div>
+  );
 }

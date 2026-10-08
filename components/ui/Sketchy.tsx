@@ -213,3 +213,57 @@ export function DateChip({ label, value, onChange }: { label: string; value: str
     </div>
   );
 }
+
+/** ON / OFF を切り替える手描き風のチップ */
+export function ToggleChip({ on, onChange, children }: { on: boolean; onChange: (v: boolean) => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      onClick={() => onChange(!on)}
+      className={`pen flex items-center gap-2 border-2 border-[#3b2f24] px-3 text-left transition-colors ${on ? "bg-[rgba(255,224,110,0.85)]" : "bg-[rgba(255,250,225,0.6)] opacity-80 hover:opacity-100"}`}
+      style={{ borderRadius: WOBBLE, minHeight: 40 }}
+    >
+      <span className="grid size-[22px] shrink-0 place-items-center rounded-full border-2 border-[#3b2f24] bg-white/80 text-[15px] leading-none text-[#c8402f]">{on ? "✓" : ""}</span>
+      <span className="text-[20px] leading-[34px]" style={{ fontFamily: "var(--font-hand)" }}>
+        {children}
+      </span>
+    </button>
+  );
+}
+
+/** ‹ 値 › で増減するチップ(分など) */
+export function StepChip({
+  label,
+  text,
+  onDec,
+  onInc,
+  decDisabled,
+  incDisabled,
+}: {
+  label: string;
+  text: string;
+  onDec: () => void;
+  onInc: () => void;
+  decDisabled?: boolean;
+  incDisabled?: boolean;
+}) {
+  const btn = "pen grid size-[30px] place-items-center rounded-full text-[22px] leading-none transition-colors hover:bg-[rgba(255,224,110,0.8)] disabled:opacity-30";
+  return (
+    <div className="min-w-0">
+      <span className="block text-[15px] leading-[18px] opacity-60">{label}</span>
+      <div className="flex items-center justify-between border-2 border-[#3b2f24] bg-[rgba(255,250,225,0.85)] px-1" style={{ borderRadius: WOBBLE_B, minHeight: 40 }} role="group" aria-label={label}>
+        <button type="button" aria-label={`${label} 줄이기`} className={btn} disabled={decDisabled} onClick={onDec}>
+          ‹
+        </button>
+        <span className="text-[22px] tabular-nums leading-[34px]" style={{ fontFamily: "var(--font-hand)" }}>
+          {text}
+        </span>
+        <button type="button" aria-label={`${label} 늘리기`} className={btn} disabled={incDisabled} onClick={onInc}>
+          ›
+        </button>
+      </div>
+    </div>
+  );
+}

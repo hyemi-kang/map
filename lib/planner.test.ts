@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { AREAS, areaById } from "@/data/regions";
-import { buildPlan, optimizeOrder, parseTime, suggestAddition, suggestRemoval, travel } from "./planner";
+import { buildPlan, optimizeOrder, parseTime, suggestAddition, suggestOrder, suggestRemoval, travel } from "./planner";
 
 const kama = areaById("kamakura-enoshima");
 const st = (id: string) => kama.stations.find((s) => s.id === id)!;
@@ -110,5 +110,78 @@ describe("data", () => {
         expect(s.stay).toBeGreaterThan(0);
       }
     }
+  });
+});
+
+describe("lunch", () => {
+  const lunch = { at: 11 * 60 + 30, latest: 14 * 60, stay: 60 };
+  const spots = [sp("tsurugaoka"), sp("kotokuin"), sp("hasedera"), sp("komachi")];
+
+  it("昼食は 11:30 以降の最初の区切りで入る", () => {
+    const plan = buildPlan({ ...base, spots, lunch });
+    const idx = plan.items.findIndex((i) => i.kind === "meal");
+    expect(idx).toBeGreaterThan(0);
+    const meal = plan.items[idx];
+    expect(meal.depart - meal.arrive).toBe(60);
+    expect(meal.arrive).toBeGreaterThanOrEqual(11 * 60 + 30);
+    // 昼食の直前の場所と同じ座標(移動しない)
+    expect(meal.place.lat).toBe(plan.items[idx - 1].place.lat);
+    expect(plan.legs[idx - 1].minutes).toBe(0);
+    // 区間の数は常に「件数 - 1」
+    expect(plan.legs).toHaveLength(plan.items.length - 1);
+  });
+
+  it("昼食なしの設定なら入らない", () => {
+    expect(buildPlan({ ...base, spots, lunch: null }).items.some((i) => i.kind === "meal")).toBe(false);
+  });
+
+  it("昼食の分だけ終了時刻が後ろにずれる", () => {
+    const a = buildPlan({ ...base, spots, lunch: null }).arrival;
+    const b = buildPlan({ ...base, spots, lunch }).arrival;
+    expect(b - a).toBe(60);
+  });
+
+  it("14:00 を過ぎてから始めるなら昼食は入れない", () => {
+    const plan = buildPlan({ ...base, startTime: parseTime("14:30"), endTime: parseTime("20:00"), spots: [sp("komachi")], lunch });
+    expect(plan.items.some((i) => i.kind === "meal")).toBe(false);
+  });
+});
+
+describe("suggestOrder / keepOrder", () => {
+  // わざと遠回りになる並び(鎌倉 → 江ノ島 → 鎌倉大仏 → 鶴岡八幡宮 → 小町通り)
+  const messy = [sp("enoshima-jinja"), sp("tsurugaoka"), sp("kotokuin"), sp("komachi")];
+
+  it("keepOrder なら、ユーザーが選んだ順序のまま時刻表を作る", () => {
+    const plan = buildPlan({ ...base, spots: messy, keepOrder: true });
+    expect(plan.items.filter((i) => i.kind === "spot").map((i) => i.place.id)).toEqual(messy.map((s) => s.id));
+  });
+
+  it("より良い順序があれば提案し、適用すると到着が早まる", () => {
+    const input = { ...base, spots: messy, keepOrder: true };
+    const s = suggestOrder(input);
+    expect(s).not.toBeNull();
+    expect(s!.savedMin).toBeGreaterThanOrEqual(10);
+    const applied = buildPlan({ ...input, spots: s!.order, keepOrder: true });
+    expect(applied.arrival).toBeLessThan(buildPlan(input).arrival);
+    // 同じ場所の集合
+    expect(s!.order.map((x) => x.id).sort()).toEqual(messy.map((x) => x.id).sort());
+  });
+
+  it("すでに良い順序なら提案しない", () => {
+    const best = optimizeOrder(base.start, messy, base.end, base.startTime, base.hints);
+    expect(suggestOrder({ ...base, spots: best, keepOrder: true })).toBeNull();
+  });
+
+  it("1 か所だけなら提案しない", () => {
+    expect(suggestOrder({ ...base, spots: [sp("komachi")], keepOrder: true })).toBeNull();
+  });
+
+  it("追加提案は、今の順序を崩さない位置に差し込む", () => {
+    const input = { ...base, spots: [sp("tsurugaoka"), sp("kotokuin")], keepOrder: true };
+    const s = suggestAddition(input, kama.spots, new Set());
+    expect(s).not.toBeNull();
+    const ids = s!.plan.items.filter((i) => i.kind === "spot").map((i) => i.place.id);
+    expect(ids.indexOf("tsurugaoka")).toBeLessThan(ids.indexOf("kotokuin"));
+    expect(ids[s!.index]).toBe(s!.spot.id);
   });
 });

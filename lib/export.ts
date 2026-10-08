@@ -11,20 +11,23 @@ import { fmtTime, type Item, type Plan } from "./planner";
 
 const xml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const label = (it: Item, n: number) => (it.kind === "spot" ? `${n}. ${it.place.ja}` : `${it.kind === "start" ? "출발" : "도착"} ${it.place.ja}`);
+const label = (it: Item, n: number) =>
+  it.kind === "spot" ? `${n}. ${it.place.ja}` : it.kind === "meal" ? "점심 식사" : `${it.kind === "start" ? "출발" : "도착"} ${it.place.ja}`;
 
 function describe(it: Item, plan: Plan, i: number) {
   const next = plan.legs[i];
   const lines = [it.place.ko];
   if (it.kind === "spot") lines.push(`${fmtTime(it.arrive + it.wait)} 도착 → ${fmtTime(it.depart)} 출발 (${it.stay}분)`);
+  else if (it.kind === "meal") lines.push(`${fmtTime(it.arrive)}–${fmtTime(it.depart)} (${it.stay}분)`);
   else lines.push(`${fmtTime(it.arrive)}`);
-  if (next && plan.items[i + 1]) lines.push(`다음 장소까지 ${next.mode === "walk" ? "도보" : "전철·버스"} 약 ${next.minutes}분`);
+  if (next && next.minutes > 0 && plan.items[i + 1]) lines.push(`다음 장소까지 ${next.mode === "walk" ? "도보" : "전철·버스"} 약 ${next.minutes}분`);
   return lines;
 }
 
 export function buildKml(title: string, plan: Plan): string {
   let n = 0;
   const marks = plan.items.map((it, i) => {
+    if (it.kind === "meal") return "";
     if (it.kind === "spot") n++;
     const desc = describe(it, plan, i).join("\n") + (it.kind === "spot" ? `\n${spotUrl(it.place)}` : "");
     return `    <Placemark>
@@ -33,14 +36,14 @@ export function buildKml(title: string, plan: Plan): string {
       <Point><coordinates>${it.place.lng},${it.place.lat},0</coordinates></Point>
     </Placemark>`;
   });
-  const line = plan.items.map((it) => `${it.place.lng},${it.place.lat},0`).join(" ");
+  const line = plan.items.filter((it) => it.kind !== "meal").map((it) => `${it.place.lng},${it.place.lat},0`).join(" ");
   return `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
     <name>${xml(title)}</name>
     <Folder>
       <name>${xml(title)}</name>
-${marks.join("\n")}
+${marks.filter(Boolean).join("\n")}
     </Folder>
     <Placemark>
       <name>${xml("방문 순서")}</name>
@@ -90,7 +93,7 @@ export function buildIcs(title: string, plan: Plan, date: string, uidSeed: strin
     if (it.kind === "spot") n++;
     const start = it.kind === "spot" ? it.arrive + it.wait : it.arrive;
     // 駅の予定は 15 分の枠にする
-    const end = it.kind === "spot" ? it.depart : start + 15;
+    const end = it.kind === "spot" || it.kind === "meal" ? it.depart : start + 15;
     const p: Place = it.place;
     const desc = [...describe(it, plan, i), `Google 지도: ${spotUrl(p)}`].join("\n");
     return [

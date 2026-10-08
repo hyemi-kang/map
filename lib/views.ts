@@ -32,10 +32,10 @@ export function prefRect(pref: PrefId): Rect {
   return featureRect(muniByPref[pref].features);
 }
 
-export function areaRect(areaId: string): Rect {
+export function areaRect(areaId: string, extra: { lat: number; lng: number }[] = []): Rect {
   const area = areaById(areaId);
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-  for (const p of [...area.spots, ...area.stations]) {
+  for (const p of [...area.spots, ...area.stations, ...extra]) {
     const [x, y] = lngLatToWorld(p.lng, p.lat);
     x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y);
   }
@@ -44,4 +44,9 @@ export function areaRect(areaId: string): Rect {
   const w = Math.max(minSize, x1 - x0);
   const h = Math.max(minSize, y1 - y0);
   return { x: (x0 + x1) / 2 - w / 2, y: (y0 + y1) / 2 - h / 2, w, h };
+}
+
+/** 1 か所に寄る視点(ノートに隠れない側の中央に置く) */
+export function focusView(wx: number, wy: number, h: number, aspect: number, reserve: Reserve = { right: 0, bottom: 0 }): View {
+  return { cx: wx + (h * aspect * reserve.right) / 2, cy: wy + (h * reserve.bottom) / 2, h };
 }

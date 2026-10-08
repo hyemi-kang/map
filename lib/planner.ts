@@ -10,13 +10,17 @@ export const TRANSIT_WAIT_MIN = 8;
 export const SLACK_SUGGEST_MIN = 45;
 
 export type Hints = Record<string, number> | undefined;
+
+/** 昼食: at 以降の最初の区切りで stay 分とる。latest を過ぎていたらとらない */
+export type Lunch = { at: number; latest: number; stay: number } | null | undefined;
+export const DEFAULT_LUNCH = { at: 11 * 60 + 30, latest: 14 * 60, stay: 60 };
 export type Mode = "walk" | "train";
 
 export type Leg = { fromId: string; toId: string; minutes: number; mode: Mode; km: number };
 
 export type Item = {
   place: Place;
-  kind: "start" | "spot" | "end";
+  kind: "start" | "spot" | "meal" | "end";
   arrive: number;
   /** 営業開始まで待つ時間 */
   wait: number;
@@ -52,12 +56,26 @@ export function travel(a: Place, b: Place, hints: Hints): Leg {
 type Sim = { items: Item[]; legs: Leg[]; arrival: number; penalty: number };
 
 /** 順序を決めたときの時刻表を積み上げる。営業開始前なら待ち、閉館に間に合わなければペナルティ */
-function simulate(start: Station, order: Spot[], end: Station, startTime: number, hints: Hints): Sim {
+function simulate(start: Station, order: Spot[], end: Station, startTime: number, hints: Hints, lunch?: Lunch): Sim {
   const items: Item[] = [{ place: start, kind: "start", arrive: startTime, wait: 0, depart: startTime, stay: 0 }];
   const legs: Leg[] = [];
   let t = startTime;
   let penalty = 0;
   let prev: Place = start;
+  let lunchDone = !lunch;
+
+  /** いま居る場所で昼食をとる(移動は発生しないので、前の場所との区間は 0 分) */
+  const maybeLunch = () => {
+    if (lunchDone || !lunch || t < lunch.at) return;
+    lunchDone = true;
+    if (t > lunch.latest) return;
+    const meal: Place = { id: "lunch", ja: "ランチ", ko: "점심 식사", lat: prev.lat, lng: prev.lng };
+    legs.push({ fromId: prev.id, toId: meal.id, minutes: 0, mode: "walk", km: 0 });
+    items.push({ place: meal, kind: "meal", arrive: t, wait: 0, depart: t + lunch.stay, stay: lunch.stay });
+    t += lunch.stay;
+  };
+
+  maybeLunch();
   for (const s of order) {
     const leg = travel(prev, s, hints);
     legs.push(leg);
@@ -76,6 +94,7 @@ function simulate(start: Station, order: Spot[], end: Station, startTime: number
     items.push({ place: s, kind: "spot", arrive, wait, depart, stay: s.stay, issue });
     t = depart;
     prev = s;
+    maybeLunch();
   }
   const last = travel(prev, end, hints);
   legs.push(last);
@@ -106,13 +125,13 @@ function* permutations<T>(arr: T[]): Generator<T[]> {
 const cost = (s: Sim) => s.arrival + s.penalty;
 
 /** 始点・終点の駅を固定したまま、訪問順を最適化する */
-export function optimizeOrder(start: Station, spots: Spot[], end: Station, startTime: number, hints: Hints): Spot[] {
+export function optimizeOrder(start: Station, spots: Spot[], end: Station, startTime: number, hints: Hints, lunch?: Lunch): Spot[] {
   if (spots.length <= 1) return spots.slice();
   if (spots.length <= 8) {
     let best = spots;
     let bestCost = Infinity;
     for (const p of permutations(spots)) {
-      const c = cost(simulate(start, p, end, startTime, hints));
+      const c = cost(simulate(start, p, end, startTime, hints, lunch));
       if (c < bestCost) {
         bestCost = c;
         best = p;
@@ -139,13 +158,13 @@ export function optimizeOrder(start: Station, spots: Spot[], end: Station, start
     cur = next;
   }
   let improved = true;
-  let bestC = cost(simulate(start, order, end, startTime, hints));
+  let bestC = cost(simulate(start, order, end, startTime, hints, lunch));
   while (improved) {
     improved = false;
     for (let i = 0; i < order.length - 1; i++) {
       for (let j = i + 1; j < order.length; j++) {
         const cand = order.slice(0, i).concat(order.slice(i, j + 1).reverse(), order.slice(j + 1));
-        const c = cost(simulate(start, cand, end, startTime, hints));
+        const c = cost(simulate(start, cand, end, startTime, hints, lunch));
         if (c < bestC) {
           bestC = c;
           order.splice(0, order.length, ...cand);
@@ -164,14 +183,15 @@ export type PlanInput = {
   startTime: number;
   endTime: number;
   hints?: Record<string, number>;
+  lunch?: Lunch;
   /** true なら spots の並びをそのまま使う */
   keepOrder?: boolean;
 };
 
 export function buildPlan(input: PlanInput): Plan {
-  const { start, end, startTime, endTime, hints } = input;
-  const order = input.keepOrder ? input.spots : optimizeOrder(start, input.spots, end, startTime, hints);
-  const sim = simulate(start, order, end, startTime, hints);
+  const { start, end, startTime, endTime, hints, lunch } = input;
+  const order = input.keepOrder ? input.spots : optimizeOrder(start, input.spots, end, startTime, hints, lunch);
+  const sim = simulate(start, order, end, startTime, hints, lunch);
   const issues: string[] = [];
   for (const it of sim.items) {
     if (it.issue === "closes-early") issues.push(`${it.place.ko}은(는) 도착·관람 시간대에 문을 닫을 수 있어요.`);
@@ -191,9 +211,13 @@ export function buildPlan(input: PlanInput): Plan {
   };
 }
 
-export type Suggestion = { spot: Spot; plan: Plan; addedMin: number };
+/** index: 追加するときに spots のどこへ差し込むか(keepOrder のときは最も時間が増えない位置) */
+export type Suggestion = { spot: Spot; plan: Plan; addedMin: number; index: number };
 
-/** 余り時間に収まり、営業時間内で、増える時間が最も少ない候補を 1 件返す。なければ null */
+/**
+ * 余り時間に収まり、営業時間内で、増える時間が最も少ない候補を 1 件返す。なければ null。
+ * keepOrder のとき(ユーザーが決めた順序を守るとき)は、今の順序を崩さずに差し込める位置を探す。
+ */
 export function suggestAddition(input: PlanInput, candidates: Spot[], rejected: ReadonlySet<string>): Suggestion | null {
   const base = buildPlan(input);
   if (base.overBy > 0 || base.slack < SLACK_SUGGEST_MIN) return null;
@@ -201,14 +225,38 @@ export function suggestAddition(input: PlanInput, candidates: Spot[], rejected: 
   let best: Suggestion | null = null;
   for (const c of candidates) {
     if (chosen.has(c.id) || rejected.has(c.id)) continue;
-    const plan = buildPlan({ ...input, spots: [...input.spots, c] });
-    const item = plan.items.find((i) => i.place.id === c.id);
-    if (plan.overBy > 0 || plan.issues.length > 0 || !item || item.issue) continue;
-    const added = plan.arrival - base.arrival;
+    const positions = input.keepOrder ? Array.from({ length: input.spots.length + 1 }, (_, i) => i) : [input.spots.length];
+    let found: { plan: Plan; index: number } | null = null;
+    for (const pos of positions) {
+      const spots = [...input.spots.slice(0, pos), c, ...input.spots.slice(pos)];
+      const plan = buildPlan({ ...input, spots });
+      const item = plan.items.find((i) => i.place.id === c.id);
+      if (plan.overBy > 0 || plan.issues.length > 0 || !item || item.issue) continue;
+      if (!found || plan.arrival < found.plan.arrival) found = { plan, index: pos };
+    }
+    if (!found) continue;
+    const added = found.plan.arrival - base.arrival;
     // 同じくらいなら定番(priority が小さい方)を先に出す
-    if (!best || added + c.priority * 3 < best.addedMin + best.spot.priority * 3) best = { spot: c, plan, addedMin: added };
+    if (!best || added + c.priority * 3 < best.addedMin + best.spot.priority * 3) best = { spot: c, plan: found.plan, addedMin: added, index: found.index };
   }
   return best;
+}
+
+export type OrderSuggestion = { order: Spot[]; plan: Plan; savedMin: number };
+
+/**
+ * ユーザーが選んだ順序より、観光しやすい順序(移動が短い・営業時間に合う)があれば返す。
+ * 10 分以上短くなるか、営業時間の問題が減るときだけ提案する。
+ */
+export function suggestOrder(input: PlanInput): OrderSuggestion | null {
+  if (input.spots.length < 2) return null;
+  const current = buildPlan({ ...input, keepOrder: true });
+  const order = optimizeOrder(input.start, input.spots, input.end, input.startTime, input.hints, input.lunch);
+  if (order.every((s, i) => s.id === input.spots[i].id)) return null;
+  const best = buildPlan({ ...input, spots: order, keepOrder: true });
+  const saved = current.arrival - best.arrival;
+  if (saved < 10 && best.issues.length >= current.issues.length) return null;
+  return { order, plan: best, savedMin: Math.max(0, saved) };
 }
 
 /** 時間を超えたときに外す候補(優先度が低く、外すと最も時間が減るもの) */

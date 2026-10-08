@@ -25,6 +25,8 @@ type Props = {
   interactive?: boolean;
   /** true の間は描画を止める(上に不透明な画面が重なっているとき) */
   paused?: boolean;
+  /** true の間は、視点の変更をスプリングにせず即座に反映する(ドラッグ・ピンチ中) */
+  instant?: boolean;
   className?: string;
 };
 
@@ -56,11 +58,12 @@ export function worldToScreen(view: View, width: number, height: number, wx: num
   };
 }
 
-export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onSettled, interactive = true, paused = false, className }: Props) {
+export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onSettled, interactive = true, paused = false, instant = false, className }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const api = useRef<{
     goTo: (v: View, l: LayerSpec) => void;
+    setDirect: (v: View) => void;
     setSheet: (s: Sheet) => void;
     setInteractive: (b: boolean) => void;
   } | null>(null);
@@ -69,6 +72,8 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
   const first = useRef({ view, layer, interactive, sheet });
   const pausedRef = useRef(paused);
   pausedRef.current = paused;
+  const instantRef = useRef(instant);
+  instantRef.current = instant;
 
   useEffect(() => {
     const el = canvas.current!;
@@ -172,6 +177,9 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
 
     /* ---------- ズーム(進み具合に合わせて精細なレイヤーへ切り替える) ---------- */
     let fade: { z0: number; z1: number; c0: THREE.Vector2; c1: THREE.Vector2 } | null = null;
+    let moveCtl: { stop?: () => void } | null = null;
+    let repaintTimer = 0;
+    let lastRepaint = 0;
 
     const goTo = async (v: View, spec: LayerSpec) => {
       const my = ++token;
@@ -190,6 +198,7 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
       fade = { z0, z1, c0, c1 };
       uniforms.mixT.value = 0;
       const move = animate(material, { centerX: v.cx, centerY: v.cy, zoom: z1 }, reduce ? { duration: 0 } : SPRING);
+      moveCtl = move as unknown as { stop?: () => void };
       try {
         await (move as unknown as PromiseLike<unknown>);
       } catch {
@@ -211,12 +220,31 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
       cb.current.onSettled?.();
     };
 
+    /** ドラッグ・ピンチ中: 視点を即座に動かし、絵は間引きながら描き直す */
+    const setDirect = (v: View) => {
+      token++;
+      moveCtl?.stop?.();
+      fade = null;
+      busy = false;
+      current = v;
+      uniforms.center.value.set(v.cx, v.cy);
+      uniforms.zoom.value = Math.log(v.h);
+      uniforms.mixT.value = 0;
+      if (repaintTimer) return;
+      const wait = Math.max(0, 140 - (performance.now() - lastRepaint));
+      repaintTimer = window.setTimeout(() => {
+        repaintTimer = 0;
+        lastRepaint = performance.now();
+        paint(a, a.spec, boundsFor(current, aspect, 1.7), null, "A", 1.36);
+      }, wait);
+    };
+
     const setSheet = (s: Sheet) => {
       sheetState = s;
       animate(material, { inset: s.inset, tilt: s.tilt, wear: s.wear }, reduce ? { duration: 0 } : SHEET_SPRING);
     };
 
-    api.current = { goTo, setSheet, setInteractive: (v) => (canInteract = v) };
+    api.current = { goTo, setDirect, setSheet, setInteractive: (v) => (canInteract = v) };
 
     /* ---------- ポインター ---------- */
     const toWorld = (e: MouseEvent) => {
@@ -295,6 +323,7 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
     return () => {
       token++;
       window.clearTimeout(resizeTimer);
+      window.clearTimeout(repaintTimer);
       cancelFrame(render);
       if (raf) cancelAnimationFrame(raf);
       ro.disconnect();
@@ -321,8 +350,10 @@ export default function PaperMap({ view, layer, sheet, onPick, onSheetClick, onS
     const same =
       p.view.cx === view.cx && p.view.cy === view.cy && p.view.h === view.h && JSON.stringify(p.layer) === JSON.stringify(layer);
     if (same) return;
+    const sameLayer = JSON.stringify(p.layer) === JSON.stringify(layer);
     prev.current = { view, layer };
-    api.current?.goTo(view, layer);
+    if (instantRef.current && sameLayer) api.current?.setDirect(view);
+    else api.current?.goTo(view, layer);
   }, [view, layer]);
 
   return (

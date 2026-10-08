@@ -53,3 +53,7 @@ button { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* 日程の地図: ドラッグで動かせる */
+.map-drag { cursor: grab; }
+.map-drag:active { cursor: grabbing; }
