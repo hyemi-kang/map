@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  --wall: #f6f3ec;
+  --ink: #3b2f24;
+  --paper: #fffdf6;
+  --font-hand: "Nanum Pen Script", "Gaegu", "Yusei Magic", cursive;
+  --font-body: "Gaegu", "Yusei Magic", "Nanum Pen Script", cursive;
+  --font-ja: "Yusei Magic", "Gaegu", cursive;
+  /* ペン型のカーソル(先端が左下) */
+  --pen-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M3 29 L5 21 L22 4 L28 10 L11 27 Z' fill='%23d9534f' stroke='%232b2118' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M3 29 L5 21 L11 27 Z' fill='%23f5e2c4' stroke='%232b2118' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M3 29 L4.3 25.6 L6.4 27.7 Z' fill='%232b2118'/%3E%3C/svg%3E") 3 29;
+}
+
+html, body { height: 100%; margin: 0; overflow: hidden; background: #6d4426; color: var(--ink); }
+body { font-family: var(--font-body); font-size: 20px; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; }
+.pen, .pen * { cursor: var(--pen-cursor), pointer; }
+.pen-area { cursor: var(--pen-cursor), auto; }
+.map-canvas canvas { cursor: zoom-in; }
+.map-canvas.is-region canvas { cursor: default; }
+.map-canvas.is-region canvas[data-hit="1"] { cursor: var(--pen-cursor), pointer; }
+
+/* 木の机: 横板 + 木目 + 周辺の落ち込み */
+.desk {
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(255, 236, 205, 0.28), rgba(255, 236, 205, 0) 62%),
+    radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(25, 10, 0, 0.5) 100%),
+    repeating-linear-gradient(0deg, rgba(34, 17, 4, 0.6) 0 2px, rgba(255, 224, 182, 0.16) 2px 4px, rgba(0, 0, 0, 0) 4px 230px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='460'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.38' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.09  0 0 0 0 0.02  0 0 0 1.5 -0.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #a8764d 0%, #8c5c34 55%, #7b4f2b 100%);
+}
+
+/* ノート: 罫線・余白の赤線 */
+.notebook-paper {
+  background:
+    linear-gradient(90deg, transparent 0 58px, rgba(214, 90, 80, 0.55) 58px 60px, transparent 60px),
+    repeating-linear-gradient(180deg, transparent 0 33px, rgba(110, 150, 190, 0.42) 33px 34px),
+    radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 60%),
+    var(--paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

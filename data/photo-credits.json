@@ -1,0 +1,597 @@
+{
+  "tsurugaoka": {
+    "file": "tsurugaoka.jpg",
+    "author": "ulysses_powers from Tsurugaoka Hachimangu in Yukinoshita, Kamakura, Kanagawa",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:TsurugaokaHachimangu_by_ulysses_powers_in_Kamakura.jpg",
+    "title": "TsurugaokaHachimangu by ulysses powers in Kamakura"
+  },
+  "kotokuin": {
+    "file": "kotokuin.jpg",
+    "author": "663highland",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:230128_Kamakura_Daibutsu_Japan01s3.jpg",
+    "title": "230128 Kamakura Daibutsu Japan01s3"
+  },
+  "hasedera": {
+    "file": "hasedera.jpg",
+    "author": "Junichi",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kamakura_Hasedera_Kannondou.jpg",
+    "title": "Kamakura Hasedera Kannondou"
+  },
+  "enoshima-jinja": {
+    "file": "enoshima-jinja.jpg",
+    "author": "Aimaimyi",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Enoshimajinja_-05.jpg",
+    "title": "Enoshimajinja -05"
+  },
+  "sea-candle": {
+    "file": "sea-candle.jpg",
+    "author": "DXR",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Enoshima_Lighthouse_130809_1.jpg",
+    "title": "Enoshima Lighthouse 130809 1"
+  },
+  "kamakurakokomae": {
+    "file": "kamakurakokomae.jpg",
+    "author": "Quercus acuta",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kamakura-Koko-Mae_Station.jpg",
+    "title": "Kamakura-Koko-Mae Station"
+  },
+  "yuigahama": {
+    "file": "yuigahama.jpg",
+    "author": "663highland",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:230128_Yuigahama_Kamakura_Kanagawa_pref_Japan02s3.jpg",
+    "title": "230128 Yuigahama Kamakura Kanagawa pref Japan02s3"
+  },
+  "kenchoji": {
+    "file": "kenchoji.jpg",
+    "author": "Steve Cadman, Flickr user stevecadman",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kencho-ji_108599196_ac1ef7203f_o.jpg",
+    "title": "Kencho-ji 108599196 ac1ef7203f o"
+  },
+  "meigetsuin": {
+    "file": "meigetsuin.jpg",
+    "author": "Tarourashima",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Meigetsu-in_Kamakura_Main-Hall.jpg",
+    "title": "Meigetsu-in Kamakura Main-Hall"
+  },
+  "enkakuji": {
+    "file": "enkakuji.jpg",
+    "author": "Kentagon",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Engakuji_Sanmon_Kamakura.jpg",
+    "title": "Engakuji Sanmon Kamakura"
+  },
+  "hokokuji": {
+    "file": "hokokuji.jpg",
+    "author": "Naokijp",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:H%C5%8Dkoku-ji,_Main_Hall_001.jpg",
+    "title": "Hōkoku-ji, Main Hall 001"
+  },
+  "zeniarai": {
+    "file": "zeniarai.jpg",
+    "author": "Σ64",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Zeniaraibenzaiten_Ugafuku-Shrine_01.jpg",
+    "title": "Zeniaraibenzaiten Ugafuku-Shrine 01"
+  },
+  "akarenga": {
+    "file": "akarenga.jpg",
+    "author": "Kakidai",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Yokohama_Red_Brick_Warehouse_2012.JPG",
+    "title": "Yokohama Red Brick Warehouse 2012"
+  },
+  "yamashita": {
+    "file": "yamashita.jpg",
+    "author": "不明",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:YamashitakoenJP14Apr05.jpg",
+    "title": "YamashitakoenJP14Apr05"
+  },
+  "chukagai": {
+    "file": "chukagai.jpg",
+    "author": "かなえゆうじん",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E6%A8%AA%E6%B5%9C%E4%B8%AD%E8%8F%AF%E8%A1%97-1.jpg",
+    "title": "横浜中華街-1"
+  },
+  "landmark": {
+    "file": "landmark.jpg",
+    "author": "Sunwater~jawiki",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Yokohama_Landmark_Tower_202207.jpg",
+    "title": "Yokohama Landmark Tower 202207"
+  },
+  "minatonomieru": {
+    "file": "minatonomieru.jpg",
+    "author": "妖精書士",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Harbor_View_Park_(Yokohama)_Observation_deck.jpg",
+    "title": "Harbor View Park (Yokohama) Observation deck"
+  },
+  "sankeien": {
+    "file": "sankeien.jpg",
+    "author": "Arisdp",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sangkaien_Garden.jpg",
+    "title": "Sangkaien Garden"
+  },
+  "odawarajo": {
+    "file": "odawarajo.jpg",
+    "author": "663highland",
+    "license": "CC BY 2.5",
+    "source": "https://commons.wikimedia.org/wiki/File:161223_Odawara_Castle_Odawara_Japan01s3.jpg",
+    "title": "161223 Odawara Castle Odawara Japan01s3"
+  },
+  "hakonejinja": {
+    "file": "hakonejinja.jpg",
+    "author": "Aimaimyi",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hakonejinja_-02.jpg",
+    "title": "Hakonejinja -02"
+  },
+  "owakudani": {
+    "file": "owakudani.jpg",
+    "author": "663highland",
+    "license": "CC BY 2.5",
+    "source": "https://commons.wikimedia.org/wiki/File:161223_Owakudani_Hakone_Japan09s3.jpg",
+    "title": "161223 Owakudani Hakone Japan09s3"
+  },
+  "chokoku": {
+    "file": "chokoku.jpg",
+    "author": "leon&amp;mae",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hakone5.jpg",
+    "title": "Hakone5"
+  },
+  "goraparkm": {
+    "file": "goraparkm.jpg",
+    "author": "663highland",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:211126_Gora_Park_Hakone_Japan01s3.jpg",
+    "title": "211126 Gora Park Hakone Japan01s3"
+  },
+  "mikasa": {
+    "file": "mikasa.jpg",
+    "author": "Unknown authorUnknown author",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Japanese_battleship_Mikasa.jpg",
+    "title": "Japanese battleship Mikasa"
+  },
+  "verny": {
+    "file": "verny.jpg",
+    "author": "Quercus acuta",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Verny_Park_-_01.jpg",
+    "title": "Verny Park - 01"
+  },
+  "jogashima": {
+    "file": "jogashima.jpg",
+    "author": "国土地理院",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Jogashima_aerial_photograph.jpg",
+    "title": "Jogashima aerial photograph"
+  },
+  "kannonzaki": {
+    "file": "kannonzaki.jpg",
+    "author": "Quercus acuta",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kannonzaki_park_01.jpg",
+    "title": "Kannonzaki park 01"
+  },
+  "sensoji": {
+    "file": "sensoji.jpg",
+    "author": "Asturio Cantabrio",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Asakusa_Senso-ji_2021-12_ac_(2).jpg",
+    "title": "Asakusa Senso-ji 2021-12 ac (2)"
+  },
+  "skytree": {
+    "file": "skytree.jpg",
+    "author": "Kakidai",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyo_Skytree_2014_%E2%85%A2.jpg",
+    "title": "Tokyo Skytree 2014 Ⅲ"
+  },
+  "ameyoko": {
+    "file": "ameyoko.jpg",
+    "author": "663highland",
+    "license": "CC BY 2.5",
+    "source": "https://commons.wikimedia.org/wiki/File:Ameya-yokocho01s5s3200.jpg",
+    "title": "Ameya-yokocho01s5s3200"
+  },
+  "tnm": {
+    "file": "tnm.jpg",
+    "author": "Wiiii",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyo_National_Museum,_Honkan_2010.jpg",
+    "title": "Tokyo National Museum, Honkan 2010"
+  },
+  "sumida-park": {
+    "file": "sumida-park.jpg",
+    "author": "Mnd",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sumida_Park.jpg",
+    "title": "Sumida Park"
+  },
+  "scramble": {
+    "file": "scramble.jpg",
+    "author": "Kakidai",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2018_Shibuya_Crossing.jpg",
+    "title": "2018 Shibuya Crossing"
+  },
+  "shibuya-sky": {
+    "file": "shibuya-sky.jpg",
+    "author": "Sakura Torch",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:SHIBUYA_SCRAMBLE_SQUARE_East_Tower.jpg",
+    "title": "SHIBUYA SCRAMBLE SQUARE East Tower"
+  },
+  "meiji": {
+    "file": "meiji.jpg",
+    "author": "Tokuzo in Edomura",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Courtyard_of_Meiji_Shrine_20190717.jpg",
+    "title": "Courtyard of Meiji Shrine 20190717"
+  },
+  "takeshita": {
+    "file": "takeshita.jpg",
+    "author": "Intforce",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Takeshita_Street_in_December_2018.jpg",
+    "title": "Takeshita Street in December 2018"
+  },
+  "yoyogi": {
+    "file": "yoyogi.jpg",
+    "author": "Shinjiro",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Mainstreet_Yoyogipark.JPG",
+    "title": "Mainstreet Yoyogipark"
+  },
+  "gyoen": {
+    "file": "gyoen.jpg",
+    "author": "Kakidai",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Shinjuku_Gyoen_National_Garden_-_sakura_3.JPG",
+    "title": "Shinjuku Gyoen National Garden - sakura 3"
+  },
+  "tocho": {
+    "file": "tocho.jpg",
+    "author": "Wiiii",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyo_Metropolitan_Government_Building_No.1_200908.jpg",
+    "title": "Tokyo Metropolitan Government Building No.1 200908"
+  },
+  "omoide": {
+    "file": "omoide.jpg",
+    "author": "MaedaAkihiko",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Shinjuku-West_Omoide-Yokocho.jpg",
+    "title": "Shinjuku-West Omoide-Yokocho"
+  },
+  "kabukicho": {
+    "file": "kabukicho.jpg",
+    "author": "Kakidai",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kabukicho_Ichibangai_2.jpg",
+    "title": "Kabukicho Ichibangai 2"
+  },
+  "tokyo-station": {
+    "file": "tokyo-station.jpg",
+    "author": "MaedaAkihiko",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyo-STA_Marunouchi-Entrance_2023.jpg",
+    "title": "Tokyo-STA Marunouchi-Entrance 2023"
+  },
+  "kokyo": {
+    "file": "kokyo.jpg",
+    "author": "kcomiida",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E5%8C%97%E3%81%AE%E4%B8%B8%E5%85%AC%E5%9C%92%E5%85%A5%E3%82%8A%E5%8F%A3_-_panoramio_(1).jpg",
+    "title": "北の丸公園入り口 - panoramio (1)"
+  },
+  "ginza4": {
+    "file": "ginza4.jpg",
+    "author": "不明",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ginza_area_at_dusk_from_Tokyo_Tower.jpg",
+    "title": "Ginza area at dusk from Tokyo Tower"
+  },
+  "tsukiji": {
+    "file": "tsukiji.jpg",
+    "author": "Kakidai",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2018_Tsukiji_fish_market.jpg",
+    "title": "2018 Tsukiji fish market"
+  },
+  "hibiya": {
+    "file": "hibiya.jpg",
+    "author": "Kakidai",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hibiya_Park_summer.jpg",
+    "title": "Hibiya Park summer"
+  },
+  "statue": {
+    "file": "statue.jpg",
+    "author": "Ryoma35988 (ja:利用者:Ryoma35988)",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Odaiba_Seashore_Park.jpg",
+    "title": "Odaiba Seashore Park"
+  },
+  "gundam": {
+    "file": "gundam.jpg",
+    "author": "ITA-ATU",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Diver-City_Tokyo_as_see_from_FCG_Building.jpg",
+    "title": "Diver-City Tokyo as see from FCG Building"
+  },
+  "teamlab": {
+    "file": "teamlab.jpg",
+    "author": "Soren Bradley",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Map_Tokyo_special_wards.svg",
+    "title": "Map Tokyo special wards"
+  },
+  "toyosu": {
+    "file": "toyosu.jpg",
+    "author": "Arne Müseler",
+    "license": "CC BY-SA 3.0 de",
+    "source": "https://commons.wikimedia.org/wiki/File:Toyosu_Market_Tokyo_2.jpg",
+    "title": "Toyosu Market Tokyo 2"
+  },
+  "kiyotaki": {
+    "file": "kiyotaki.jpg",
+    "author": "Unknown authorUnknown author",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Takaot_Mountain_Railway_logo.svg",
+    "title": "Takaot Mountain Railway logo"
+  },
+  "yakuoin": {
+    "file": "yakuoin.jpg",
+    "author": "KENPEI",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Takaosan_Yakuouin_hondo.JPG",
+    "title": "Takaosan Yakuouin hondo"
+  },
+  "takao-top": {
+    "file": "takao-top.jpg",
+    "author": "© Bourrichon (talk) - fr:Bourrichon",
+    "license": "CC BY-SA 2.0 fr",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyo-to_g%C3%A9olocalisation_relief.svg",
+    "title": "Tokyo-to géolocalisation relief"
+  },
+  "beermount": {
+    "file": "beermount.jpg",
+    "author": "© Bourrichon (talk) - fr:Bourrichon",
+    "license": "CC BY-SA 2.0 fr",
+    "source": "https://commons.wikimedia.org/wiki/File:Tokyo-to_g%C3%A9olocalisation_relief.svg",
+    "title": "Tokyo-to géolocalisation relief"
+  },
+  "shinshoji": {
+    "file": "shinshoji.jpg",
+    "author": "Hoku-sou-san",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Naritasan-Shinshoji-Temple-2008.jpg",
+    "title": "Naritasan-Shinshoji-Temple-2008"
+  },
+  "omotesando-narita": {
+    "file": "omotesando-narita.jpg",
+    "author": "Hoku-sou-san",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Naritasan-Shinshoji-Temple-2008.jpg",
+    "title": "Naritasan-Shinshoji-Temple-2008"
+  },
+  "boso-mura": {
+    "file": "boso-mura.jpg",
+    "author": "Dddeco",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Fudokinooka-siryokan.JPG",
+    "title": "Fudokinooka-siryokan"
+  },
+  "aviation": {
+    "file": "aviation.jpg",
+    "author": "photo: Qurren (talk) Taken with Canon IXY 430F (Digital IXUS 245 HS)",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Museum_of_Aeronautical_Sciences_2016-11.jpg",
+    "title": "Museum of Aeronautical Sciences 2016-11"
+  },
+  "onogawa": {
+    "file": "onogawa.jpg",
+    "author": "Tamaki",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:A_view_of_Sawara-Honmachi.JPG",
+    "title": "A view of Sawara-Honmachi"
+  },
+  "inocho": {
+    "file": "inocho.jpg",
+    "author": "katorisi",
+    "license": "CC BY 2.5",
+    "source": "https://commons.wikimedia.org/wiki/File:Inou-tadataka-house,katori-city,japan.JPG",
+    "title": "Inou-tadataka-house,katori-city,japan"
+  },
+  "katori": {
+    "file": "katori.jpg",
+    "author": "Saigen Jiro",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Katori-jingu_haiden_shomen.JPG",
+    "title": "Katori-jingu haiden shomen"
+  },
+  "nokogiri-rope": {
+    "file": "nokogiri-rope.jpg",
+    "author": "掬茶",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:View_of_Nokogiriyama_Ropeway,_crossing.jpg",
+    "title": "View of Nokogiriyama Ropeway, crossing"
+  },
+  "nojima": {
+    "file": "nojima.jpg",
+    "author": "ガウス at Japanese Wikipedia",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nojimasakitodai0.jpg",
+    "title": "Nojimasakitodai0"
+  },
+  "tateyamajo": {
+    "file": "tateyamajo.jpg",
+    "author": "Saigen Jiro",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tateyama_Castle,_tenshu.JPG",
+    "title": "Tateyama Castle, tenshu"
+  },
+  "seaworld": {
+    "file": "seaworld.jpg",
+    "author": "Volfgang",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kamogawa_sea_world.jpg",
+    "title": "Kamogawa sea world"
+  },
+  "osenzara": {
+    "file": "osenzara.jpg",
+    "author": "Toshihiro Matsui",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%E5%A4%A7%E5%B1%B1%E5%8D%83%E6%9E%9A%E7%94%B0_%E5%8D%83%E8%91%89%E7%9C%8C%E9%B4%A8%E5%B7%9D%E5%B8%82_%E7%94%B0%E6%A4%8D%E3%81%88%E7%9B%B4%E5%BE%8C_-_panoramio.jpg",
+    "title": "大山千枚田 千葉県鴨川市 田植え直後 - panoramio"
+  },
+  "tanjoji": {
+    "file": "tanjoji.jpg",
+    "author": "-tomo- at Japanese Wikipedia",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Soshidou_in_Tanjoji.jpg",
+    "title": "Soshidou in Tanjoji"
+  },
+  "tokinokane": {
+    "file": "tokinokane.jpg",
+    "author": "user:Fg2",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:KawagoeTowerCommons.jpg",
+    "title": "KawagoeTowerCommons"
+  },
+  "kashiya": {
+    "file": "kashiya.jpg",
+    "author": "dailytransit",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kashiya_yokocho.jpg",
+    "title": "Kashiya yokocho"
+  },
+  "kitain": {
+    "file": "kitain.jpg",
+    "author": "Twilight2640 at Japanese Wikipedia (Transferred by Urashimataro)",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kawagoe_Kitain_temple_main_hall.jpg",
+    "title": "Kawagoe Kitain temple main hall"
+  },
+  "hikawa-kawagoe": {
+    "file": "hikawa-kawagoe.jpg",
+    "author": "wongwt",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kawagoe_Hikawa_Shrine,_Kawagoe_City;_December_2019_(01).jpg",
+    "title": "Kawagoe Hikawa Shrine, Kawagoe City; December 2019 (01)"
+  },
+  "chichibu-jinja": {
+    "file": "chichibu-jinja.jpg",
+    "author": "Asturio Cantabrio",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Chichibu-jinja_ac_(4).jpg",
+    "title": "Chichibu-jinja ac (4)"
+  },
+  "hitsujiyama": {
+    "file": "hitsujiyama.jpg",
+    "author": "京浜にけ",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Chichibu_Hitsujiyama_Park_Viewing_Hill_1.JPG",
+    "title": "Chichibu Hitsujiyama Park Viewing Hill 1"
+  },
+  "mitsumine": {
+    "file": "mitsumine.jpg",
+    "author": "Mayuno",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Mitsumine-jinja,_Haiden.jpg",
+    "title": "Mitsumine-jinja, Haiden"
+  },
+  "iwadatami": {
+    "file": "iwadatami.jpg",
+    "author": "Ocdp",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nagatoro2.jpg",
+    "title": "Nagatoro2"
+  },
+  "hodosan": {
+    "file": "hodosan.jpg",
+    "author": "Carbonium",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hodosan_Shrine_(Mt._Treasure-climb_Shrine)_-_%E5%AE%9D%E7%99%BB%E5%B1%B1%E7%A5%9E%E7%A4%BE_-_panoramio_(13).jpg",
+    "title": "Hodosan Shrine (Mt. Treasure-climb Shrine) - 宝登山神社 - panoramio (13)"
+  },
+  "railway-museum": {
+    "file": "railway-museum.jpg",
+    "author": "廣村正彰",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Logo_of_Railway_museum(Saitama).svg",
+    "title": "Logo of Railway museum(Saitama)"
+  },
+  "bonsai": {
+    "file": "bonsai.jpg",
+    "author": "Souka Kinmei",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Saitama_Omiya_Bonsai_Art_Museum%E3%83%BBgarden.jpg",
+    "title": "Saitama Omiya Bonsai Art Museum・garden"
+  },
+  "komachi": {
+    "file": "komachi.jpg",
+    "author": "Σ64",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Komachi_Street,_Kanagawa_02.jpg",
+    "title": "Komachi Street, Kanagawa 02"
+  },
+  "iwaya": {
+    "file": "iwaya.jpg",
+    "author": "Quercus acuta",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Enoshima_view_from_Kugenuma_beach.jpg",
+    "title": "Enoshima view from Kugenuma beach"
+  },
+  "misaki": {
+    "file": "misaki.jpg",
+    "author": "Asturio Cantabrio",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Port_of_Misaki_ac_(3).jpg",
+    "title": "Port of Misaki ac (3)"
+  },
+  "hanazono": {
+    "file": "hanazono.jpg",
+    "author": "Kakidai",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2025_Hanazono-jinja.jpg",
+    "title": "2025 Hanazono-jinja"
+  },
+  "kurazukuri": {
+    "file": "kurazukuri.jpg",
+    "author": "Kentagon",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:TokiNoKane_Kawagoe_2013Feb.JPG",
+    "title": "TokiNoKane Kawagoe 2013Feb"
+  },
+  "linekudari": {
+    "file": "linekudari.jpg",
+    "author": "江戸村のとくぞう",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nagatoro1.jpg",
+    "title": "Nagatoro1"
+  },
+  "hikawa-omiya": {
+    "file": "hikawa-omiya.jpg",
+    "author": "Saigen Jiro",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hikawa-jinja_(Saitama),_keidai.jpg",
+    "title": "Hikawa-jinja (Saitama), keidai"
+  }
+}
