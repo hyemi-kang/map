@@ -2,7 +2,7 @@
 
 import { motion, type Variants } from "motion/react";
 import { useId, useState } from "react";
-import { east, pathGen } from "@/lib/geo";
+import { east, pathGen, WORLD_H } from "@/lib/geo";
 import { photoOf } from "@/lib/photos";
 
 /*
@@ -57,8 +57,9 @@ export default function Room({ onSit }: { onSit: () => void }) {
           <stop offset="0" stopColor="#8fc4ea" />
           <stop offset="1" stopColor="#e9f3f8" />
         </linearGradient>
-        <radialGradient id={`lamp-${uid}`} cx="50%" cy="0%" r="90%">
-          <stop offset="0" stopColor="#fff0b8" stopOpacity="0.85" />
+        <radialGradient id={`lamp-${uid}`} cx="50%" cy="0%" r="64%">
+          <stop offset="0" stopColor="#fff0b8" stopOpacity="0.7" />
+          <stop offset="0.5" stopColor="#fff0b8" stopOpacity="0.22" />
           <stop offset="1" stopColor="#fff0b8" stopOpacity="0" />
         </radialGradient>
         <linearGradient id={`ray-${uid}`} x1="0" y1="0" x2="1" y2="1">
@@ -115,8 +116,8 @@ export default function Room({ onSit }: { onSit: () => void }) {
             <ellipse cx="1262" cy="178" rx="34" ry="14" fill="#fff" opacity="0.92" />
             <ellipse cx="1370" cy="240" rx="44" ry="12" fill="#fff" opacity="0.85" />
           </g>
-          <polygon points="1130,430 1255,262 1292,236 1330,262 1465,430" fill="#6f86a8" />
-          <polygon points="1292,236 1268,266 1281,262 1292,274 1304,262 1318,267" fill="#fff" />
+          <polygon points="1130,430 1232,318 1262,266 1292,252 1322,266 1352,318 1465,430" fill="#6f86a8" />
+          <polygon points="1262,266 1292,252 1322,266 1334,288 1320,280 1306,296 1292,282 1278,296 1264,280 1250,288" fill="#fff" />
           <rect x="1130" y="400" width="340" height="40" fill="#7ea36a" />
           <path d="M1130 408 q40 -16 90 -4 t90 0 t90 -4 t70 8 v30 h-340z" fill="#5f8a55" />
         </g>
@@ -255,8 +256,8 @@ export default function Room({ onSit }: { onSit: () => void }) {
         ))}
 
         {/* 机の上: 広げかけの地図 */}
-        <g transform="translate(640 596) scale(0.34 0.075) skewX(-8)">
-          <rect x="-10" y="-10" width="1020" height={780} rx="6" fill="#f3e9cd" stroke="#b9a77f" strokeWidth="6" />
+        <g transform={`translate(640 596) scale(0.34 ${44 / (WORLD_H + 20)}) skewX(-8)`}>
+          <rect x="-10" y="-10" width="1020" height={WORLD_H + 20} rx="6" fill="#f3e9cd" stroke="#b9a77f" strokeWidth="6" />
           <path d={mapPath} fill="#e2d4a6" stroke="#8a7650" strokeWidth="5" />
         </g>
         <g transform="translate(902 604)">

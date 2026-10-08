@@ -411,7 +411,7 @@ export default function App() {
           <motion.div key="room" className="absolute inset-0 z-[60] overflow-hidden" style={{ transformOrigin: "50% 66%" }} variants={roomVariants} initial="hidden" animate="rest" exit="sit">
             <Room onSit={() => setScene("desk")} />
             <motion.p
-              className="pointer-events-none absolute bottom-[4%] left-1/2 -translate-x-1/2 whitespace-nowrap text-[clamp(20px,2.6vw,30px)] text-[#fff3d6]"
+              className="pointer-events-none absolute bottom-[4%] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[rgba(35,18,6,0.6)] px-6 py-1 text-[clamp(20px,2.6vw,30px)] text-[#fff3d6]"
               style={{ fontFamily: "var(--font-hand)", textShadow: "0 2px 8px rgba(30,15,0,0.75)" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1, y: [0, -4, 0] }}

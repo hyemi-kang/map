@@ -63,14 +63,13 @@ const flip = {
 export default function AreaPage(p: Props) {
   const { area, settings: s } = p;
   const nSelected = p.selectedIds.length;
-  const stops = p.plan.items.map((i) => i.place);
   const totalMin = p.plan.arrival - p.plan.items[0].depart;
 
   return (
     <div>
       <h2 className="text-[42px] leading-[60px]" style={{ fontFamily: "var(--font-hand)" }}>
         <Write text={area.ko} speed={0.08} delay={0.2} />
-        <span className="ml-3 text-[22px] opacity-60" style={{ fontFamily: "var(--font-ja)" }}>
+        <span className="ml-3 whitespace-nowrap text-[20px] opacity-60" style={{ fontFamily: "var(--font-ja)" }}>
           {area.ja}
         </span>
       </h2>

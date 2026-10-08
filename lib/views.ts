@@ -34,12 +34,14 @@ export function prefRect(pref: PrefId): Rect {
 
 export function areaRect(areaId: string): Rect {
   const area = areaById(areaId);
-  const feats = muniByPref[area.pref].features.filter((f) => area.codes.includes(f.properties.N03_007));
-  const base = featureRect(feats);
-  let x0 = base.x, y0 = base.y, x1 = base.x + base.w, y1 = base.y + base.h;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
   for (const p of [...area.spots, ...area.stations]) {
     const [x, y] = lngLatToWorld(p.lng, p.lat);
     x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y);
   }
-  return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+  // 点が 1〜2 個しかないエリアでも潰れないよう、最低限の大きさを確保する
+  const minSize = 6;
+  const w = Math.max(minSize, x1 - x0);
+  const h = Math.max(minSize, y1 - y0);
+  return { x: (x0 + x1) / 2 - w / 2, y: (y0 + y1) / 2 - h / 2, w, h };
 }

@@ -59,7 +59,7 @@ for (const [code, id] of Object.entries(FOCUS)) {
   );
   const filtered = join(work, `m${code}-f.json`);
   writeFileSync(filtered, JSON.stringify(gj));
-  simplify(filtered, join(outDir, `${id}.json`), 30);
+  simplify(filtered, join(outDir, `${id}.json`), 70);
 }
 
 // 3. 4 都県の外形は市区町村を溶かして作り直す(海岸線が市区町村の境界データと食い違わないように)
