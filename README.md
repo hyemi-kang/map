@@ -1,112 +1,45 @@
-# 도쿄 근교 여행 지도 (tokyo-trip-board)
+# 도쿄 근교 여행 지도
 
-部屋の机に座り、紙の地図を広げて、東京近郊(東京・神奈川・千葉・埼玉)の日帰り旅行の行程を組み立てる Web アプリです。
-地図からエリアを選び、行きたいスポットを選ぶと、移動時間・営業時間・昼食を考慮した 1 日のスケジュールが自動で組まれます。
-完成した行程は Google マイマップ(KML)や Google カレンダー(ICS)に持ち出せます。
+방 → 책상 → 종이 지도 → 도쿄·가나가와·지바·사이타마 → 지역 → 일정표 → 실제 지도로 이어지는 여행 일정 짜기 사이트입니다.
+Next.js(정적 내보내기) + React + `motion` + `three`(종이 지도 셰이더) 로 만들었습니다.
 
-UI の言語は韓国語、地名・スポット名は日本語と韓国語を併記しています。
-
-## 主な機能
-
-- **没入型の導線**: 部屋 → 机に座る → 日本地図 → 都県 → エリア、とカメラが寄っていく
-- **紙の地図 ⇄ 実際の地図**: 同じカメラで OpenStreetMap のタイルをクロスフェードで重ねる
-- **エリアとスポット**: 4 都県・18 エリア。スポットごとに滞在時間・営業時間・カテゴリ・優先度を保持
-- **日程の自動作成**: 出発駅・到着駅・開始/終了時刻・昼食を指定すると、時刻表と移動手段(徒歩/電車)を算出
-- **提案**: 余り時間に収まる追加スポット / 時間超過時に外す候補 / 移動が短くなる推奨順序
-- **営業時間のチェック**: 閉館に間に合わない・開館前に長く待つ場合は警告
-- **スポットの追加**: Google マップの URL や座標を貼り付けて独自の場所を追加(API キー不要)
-- **書き出し**: Google マップの経路 URL、KML、ICS
-- **写真**: スポットごとの写真(Wikimedia Commons、CC ライセンスのみ)と出典表記
-
-詳細は [docs/requirements.md](docs/requirements.md)、設計は [docs/architecture.md](docs/architecture.md) を参照してください。
-
-## 技術スタック
-
-| 区分 | 使用技術 |
-| --- | --- |
-| フレームワーク | Next.js 15(App Router、静的エクスポート)、React 19、TypeScript |
-| スタイル | Tailwind CSS 4、`@fontsource`(Nanum Pen Script / Gaegu / Yusei Magic) |
-| アニメーション・3D | motion、three.js(地図シェーダー)、CSS 3D |
-| 地図データ | d3-geo(Mercator 投影)、国土数値情報由来の GeoJSON(mapshaper で簡略化) |
-| テスト | Vitest(`lib/` 配下のロジック) |
-
-## セットアップ
-
-必要なもの: Node.js 22 以上(CI は Node 22)、npm
+## 실행
 
 ```bash
+# 회사 네트워크처럼 HTTPS 를 중간에서 풀어 주는 환경에서는 Node 가 인증서를 못 믿으므로 아래 옵션이 필요합니다.
+export NODE_OPTIONS=--use-system-ca
+
 npm install
-npm run dev      # http://localhost:3000
+npm run dev          # http://localhost:3000
+npm test             # 일정 계산·내보내기·카메라 계산 (vitest)
+npm run lint         # tsc --noEmit
+npm run build        # 정적 내보내기 → out/
 ```
 
-## スクリプト
+`.next` 폴더가 깨졌을 때는 `NEXT_DIST_DIR=.next-b npx next dev --turbopack -p 3101` 처럼 출력 폴더를 바꿔서 띄울 수 있습니다.
+GitHub Pages 같은 하위 경로에 올릴 때는 `BASE_PATH=/저장소이름` 을 지정하세요.
 
-| コマンド | 内容 |
+## 데이터 만들기
+
+| 명령 | 하는 일 |
 | --- | --- |
-| `npm run dev` | 開発サーバー(Turbopack) |
-| `npm run build` | 静的ビルド(`out/` に出力) |
-| `npm run lint` | 型チェック(`tsc --noEmit`) |
-| `npm test` | 単体テスト(Vitest) |
-| `npm run geo` | 行政区域の GeoJSON を取得して `data/geo/` を再生成 |
-| `npm run photos` | スポット写真とライセンス情報を取得して `public/photos/` と `data/photo-credits.json` を更新 |
+| `npm run geo` | 동일본 도·현 경계와 4개 도·현의 시구정촌 경계를 내려받아 단순화 (`data/geo/`) |
+| `npm run photos` | 일본어 위키백과의 대표 이미지를 받아 Wikimedia Commons 에서 라이선스를 확인하고 `public/photos/` 에 저장. CC BY / CC BY-SA / CC0 / 퍼블릭 도메인만 사용. 위키백과 좌표와 어긋난 스폿도 보고 |
 
-`geo` と `photos` は社内プロキシ等の証明書で失敗する場合、`NODE_OPTIONS=--use-system-ca` を付けて実行してください。
+스폿·역·영업시간은 `data/regions.ts` 에 있습니다. 좌표와 영업시간은 대략적인 값이므로 방문 전에 공식 정보를 확인하세요.
 
-## ディレクトリ構成
+## 구성
 
-```
-app/            Next.js の入口(layout, page, グローバル CSS)
-components/
-  App.tsx       全体の状態管理とシーン遷移
-  room/         部屋・机のシーン
-  map/          紙の地図(PaperMap)、実際の地図(RealMap)、地図テクスチャ/シェーダー
-  board/        ピンと毛糸
-  notebook/     ノート UI(都県ページ、エリアページ、場所追加)
-  photos/       ポラロイド写真とモーダル
-  ui/           手描き風の共通部品(StationPicker、TimeChip など)
-data/
-  regions.ts    都県・エリア・駅・スポットのマスターデータ
-  types.ts      データの型
-  geo/          地図の GeoJSON(生成物)
-  photo-credits.json  写真の出典・ライセンス
-lib/
-  planner.ts    日程の組み立て・最適化・提案
-  geo.ts, views.ts    投影とカメラ視点の計算
-  gmaps.ts      Google マップ URL の生成と解析
-  export.ts     KML / ICS の生成
-scripts/        データ生成スクリプト(geo, photos)
-public/         写真・テクスチャ
-```
+- `components/room/` 여행 서재(첫 화면). 책상을 누르면 앉는 연출
+- `components/map/` 종이 지도(WebGL 셰이더) · 실제 지도(OpenStreetMap 타일) · 드래그/핀치/휠 제스처
+- `components/notebook/` 노트(지역 선택, 스팟 고르기, 일정표, 직접 장소 추가)
+- `lib/planner.ts` 이동 시간 추정, 점심, 영업시간, 추천 순서, 추가 장소 제안
+- `lib/export.ts` 일정을 Google 내 지도(KML)·캘린더(ICS)로 내보내기
+- `lib/gmaps.ts` Google 지도 URL 만들기 / 링크·좌표 붙여넣기 해석 (API 키 불필요)
 
-## データの追加・更新
+## 알아 둘 점
 
-- **エリア・スポットの追加**: `data/regions.ts` の `AREAS` に追記します。座標・営業時間・滞在時間は公開情報をもとにした目安なので、追加時は公式サイトで確認してください。
-- **写真の追加**: `scripts/fetch-photos.mjs` の `TITLE` に Wikipedia の記事名を対応付けて `npm run photos` を実行します。CC BY / CC BY-SA / CC0 / パブリックドメイン以外は取得しません。
-- **地図データの更新**: `npm run geo`
-
-## デプロイ(GitHub Pages)
-
-`next.config.ts` は `output: "export"` で、環境変数 `BASE_PATH` にサブパスを指定できます。
-
-```bash
-BASE_PATH=/map npm run build   # out/ に出力。公開 URL は https://<ユーザー名>.github.io/map/
-```
-
-Windows の Git Bash では `/map` がパスに変換されるため、`MSYS_NO_PATHCONV=1` を前置してください。
-GitHub Actions のワークフロー(`.github/workflows/deploy.yml`)で `main` への push 時に自動デプロイできます。リポジトリの Settings → Pages → Source を「GitHub Actions」にしてください。
-
-> 現状: ローカルで `BASE_PATH=/map` のビルドが `/_not-found` のエラーで失敗する事象が未解決です。原因の切り分け中です(詳細は [docs/requirements.md](docs/requirements.md) の「未解決の課題」)。
-
-## 注意事項
-
-- 移動時間は距離からの推定値です(公式の時刻表ではありません)。駅間など一部は `transit` で実測に近い値を上書きしています。
-- スポットの営業時間・滞在時間は目安です。訪問前に各施設の公式情報を確認してください。
-- 地図タイルは OpenStreetMap を利用しています。[タイル利用ポリシー](https://operations.osmfoundation.org/policies/tiles/)の範囲内で使用し、帰属表示を残してください。
-- 写真は各ライセンスの条件(作者表示など)に従って表示しています。出典は `data/photo-credits.json` を参照してください。
-
-## ライセンス・出典
-
-- 行政区域データ: 国土数値情報(行政区域データ N03)を [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) 経由で利用
-- 地図タイル: © OpenStreetMap contributors
-- 写真: Wikimedia Commons(各ファイルのライセンスに従う)
-- フォント: Nanum Pen Script / Gaegu / Yusei Magic(SIL OFL、`@fontsource` 経由)
+- 이동 시간은 거리로 계산한 대략적인 값입니다. 실제 환승 시간은 구간별 Google 지도 링크에서 확인하세요.
+- 실제 지도는 OpenStreetMap 타일입니다(© OpenStreetMap contributors). 많은 사용자가 쓰는 서비스로 배포한다면
+  [타일 사용 정책](https://operations.osmfoundation.org/policies/tiles/)에 맞는 타일 제공자로 바꿔 주세요.
+- Google 지도를 같은 자리에 쓰려면 Maps JavaScript API 키(과금 설정 포함)가 필요합니다.
