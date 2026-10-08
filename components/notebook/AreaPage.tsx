@@ -3,13 +3,15 @@
 import { AnimatePresence, motion } from "motion/react";
 import { CATEGORY_KO } from "@/data/regions";
 import type { Area, Spot } from "@/data/types";
-import { legUrl, routeUrl } from "@/lib/gmaps";
+import { legUrl } from "@/lib/gmaps";
 import { photoOf } from "@/lib/photos";
 import { fmtTime, type Plan, type Suggestion } from "@/lib/planner";
 import PlaceholderArt from "@/components/ui/PlaceholderArt";
+import { DateChip, StationPicker, TimeChip } from "@/components/ui/Sketchy";
+import { buildIcs, buildKml, download } from "@/lib/export";
 import Write from "./Write";
 
-export type Settings = { start: string; end: string; startStation: string; endStation: string };
+export type Settings = { start: string; end: string; startStation: string; endStation: string; date: string };
 export type Tab = "spots" | "plan";
 
 type Props = {
@@ -96,35 +98,11 @@ export default function AreaPage(p: Props) {
         <AnimatePresence mode="wait" initial={false}>
           {p.tab === "spots" ? (
             <motion.div key="spots" style={{ transformOrigin: "left center" }} {...flip}>
-              <div className="grid grid-cols-2 gap-x-3 gap-y-0 text-[19px]">
-                <label className="flex items-center gap-1">
-                  출발
-                  <select className={`${fieldCls} min-w-0 flex-1`} value={s.startStation} onChange={(e) => p.onSettings({ ...s, startStation: e.target.value })}>
-                    {area.stations.map((st) => (
-                      <option key={st.id} value={st.id}>
-                        {st.ja}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="flex items-center gap-1">
-                  도착
-                  <select className={`${fieldCls} min-w-0 flex-1`} value={s.endStation} onChange={(e) => p.onSettings({ ...s, endStation: e.target.value })}>
-                    {area.stations.map((st) => (
-                      <option key={st.id} value={st.id}>
-                        {st.ja}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="flex items-center gap-1">
-                  시작
-                  <input type="time" className={fieldCls} value={s.start} onChange={(e) => p.onSettings({ ...s, start: e.target.value })} />
-                </label>
-                <label className="flex items-center gap-1">
-                  종료
-                  <input type="time" className={fieldCls} value={s.end} onChange={(e) => p.onSettings({ ...s, end: e.target.value })} />
-                </label>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-2">
+                <div className="col-span-2"><StationPicker label="출발역" value={s.startStation} options={area.stations} onChange={(v) => p.onSettings({ ...s, startStation: v })} /></div>
+                <div className="col-span-2"><StationPicker label="도착역" value={s.endStation} options={area.stations} onChange={(v) => p.onSettings({ ...s, endStation: v })} /></div>
+                <TimeChip label="시작 시간" value={s.start} onChange={(v) => p.onSettings({ ...s, start: v })} />
+                <TimeChip label="종료 시간" value={s.end} onChange={(v) => p.onSettings({ ...s, end: v })} />
               </div>
 
               <ul className="mt-2">
@@ -272,18 +250,52 @@ export default function AreaPage(p: Props) {
                 </ul>
               )}
 
-              <a
-                href={routeUrl(stops)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pen mt-3 inline-block rounded-full border-2 border-[#3b2f24] bg-white/80 px-4 text-[22px] leading-[40px] hover:bg-[#3b2f24] hover:text-white"
-                style={{ fontFamily: "var(--font-hand)" }}
-              >
-                Google 지도에서 전체 경로 열기 ↗
-              </a>
-              <p className="text-[14px] leading-[20px] opacity-60">
+              <section className="mt-4 rounded-xl border-2 border-dashed border-[#3b2f24]/50 bg-[rgba(255,255,255,0.45)] p-3">
+                <h3 className="text-[24px] leading-[30px]" style={{ fontFamily: "var(--font-hand)" }}>
+                  Google에 일정으로 가져가기
+                </h3>
+                <p className="text-[15px] leading-[21px] opacity-70">
+                  길찾기가 아니라, 장소와 시간이 들어간 일정표로 가져가요. 파일을 받아서 Google에 불러오면 돼요.
+                </p>
+                <div className="mt-2 max-w-[210px]">
+                  <DateChip label="여행 날짜" value={p.settings.date} onChange={(v) => p.onSettings({ ...p.settings, date: v })} />
+                </div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => download(`${area.ko}-일정.kml`, buildKml(`${area.ko} 일정`, p.plan), "application/vnd.google-earth.kml+xml")}
+                    className="pen rounded-full border-2 border-[#3b2f24] bg-white/80 px-4 text-[21px] leading-[38px] transition-colors hover:bg-[#3b2f24] hover:text-white"
+                    style={{ fontFamily: "var(--font-hand)" }}
+                  >
+                    🗺 내 지도용 파일 (.kml)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => download(`${area.ko}-일정.ics`, buildIcs(`${area.ko} 일정`, p.plan, p.settings.date, `${area.id}-${p.settings.date}`), "text/calendar")}
+                    className="pen rounded-full border-2 border-[#3b2f24] bg-white/80 px-4 text-[21px] leading-[38px] transition-colors hover:bg-[#3b2f24] hover:text-white"
+                    style={{ fontFamily: "var(--font-hand)" }}
+                  >
+                    📅 캘린더용 파일 (.ics)
+                  </button>
+                </div>
+                <ul className="mt-2 text-[14px] leading-[20px] opacity-75">
+                  <li>
+                    <b>내 지도</b>: 번호가 붙은 핀과 방문 순서 선이 지도에 올라가요.{" "}
+                    <a href="https://www.google.com/mymaps" target="_blank" rel="noopener noreferrer" className="pen underline decoration-dotted">
+                      Google 내 지도 열기 ↗
+                    </a>{" "}
+                    → 새 지도 만들기 → 가져오기 → 받은 파일 선택
+                  </li>
+                  <li className="mt-1">
+                    <b>캘린더</b>: 장소마다 시간대와 위치가 있는 일정이 만들어져요.{" "}
+                    <a href="https://calendar.google.com/calendar/u/0/r/settings/export" target="_blank" rel="noopener noreferrer" className="pen underline decoration-dotted">
+                      Google 캘린더 가져오기 ↗
+                    </a>
+                  </li>
+                </ul>
+              </section>
+              <p className="mt-2 text-[14px] leading-[20px] opacity-60">
                 이동 시간은 거리로 계산한 대략적인 값이에요. 실제 환승 시간은 구간별 Google 지도 링크에서 확인하세요.
-                전체 경로는 도보 기준이며, 경유지는 최대 9곳(모바일 3곳)까지 반영돼요.
               </p>
             </motion.div>
           )}
